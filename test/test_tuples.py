@@ -3,7 +3,7 @@ import math
 import raytracer.base as rt
 
 
-class TestTupleles(unittest.TestCase):
+class TestTuples(unittest.TestCase):
     def test_points(self):
         self.assertEqual(rt.Tuple(1.0, 2.0, 3.0, 1.0), rt.Point(1.0, 2.0, 3.0))
         self.assertEqual(rt.Tuple(-1, -1, -1, 1.0), rt.Point(-1, -1, -1))

@@ -78,3 +78,32 @@ class Vector(Tuple):
             self.z * other.x - self.x * other.z,
             self.x * other.y - self.y * other.x,
         )
+
+
+class Color(Tuple):
+    def __init__(self, r: float, g: float, b: float):
+        super().__init__(r, g, b, 0.0)
+
+    @property
+    def red(self):
+        return self.x
+
+    @property
+    def green(self):
+        return self.y
+
+    @property
+    def blue(self):
+        return self.z
+
+    def __mul__(self, other):
+        if isinstance(other, Color):
+            r = self.red * other.red
+            g = self.green * other.green
+            b = self.blue * other.blue
+            return Color(r, g, b)
+        else:
+            r = self.red * other
+            g = self.green * other
+            b = self.blue * other
+            return Color(r, g, b)
