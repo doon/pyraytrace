@@ -17,23 +17,27 @@ class Tuple:
         self.w = w
 
     def __add__(self, other):
-        return Tuple(
+        return self.__class__(
             self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w
         )
 
     def __sub__(self, other):
-        return Tuple(
+        return self.__class__(
             self.x - other.x, self.y - other.y, self.z - other.z, self.w - other.w
         )
 
     def __neg__(self):
-        return Tuple(-self.x, -self.y, -self.z, -self.w)
+        return self.__class__(-self.x, -self.y, -self.z, -self.w)
 
     def __mul__(self, other):
-        return Tuple(self.x * other, self.y * other, self.z * other, self.w * other)
+        return self.__class__(
+            self.x * other, self.y * other, self.z * other, self.w * other
+        )
 
     def __truediv__(self, other):
-        return Tuple(self.x / other, self.y / other, self.z / other, self.w / other)
+        return self.__class__(
+            self.x / other, self.y / other, self.z / other, self.w / other
+        )
 
     def __eq__(self, other):
         return (
@@ -51,16 +55,16 @@ class Tuple:
 
 
 class Point(Tuple):
-    def __init__(self, x: float, y: float, z: float):
-        super().__init__(x, y, z, 1.0)
+    def __init__(self, x: float, y: float, z: float, w: float = 1.0):
+        super().__init__(x, y, z, w)
 
     def __str__(self) -> str:
         return f"Point: < {self.x}, {self.y}, {self.z}>"
 
 
 class Vector(Tuple):
-    def __init__(self, x: float, y: float, z: float):
-        super().__init__(x, y, z, 0.0)
+    def __init__(self, x: float, y: float, z: float, w: float = 0.0):
+        super().__init__(x, y, z, w)
 
     def __str__(self) -> str:
         return f"Vector: < {self.x}, {self.y}, {self.z}>"
@@ -81,8 +85,8 @@ class Vector(Tuple):
 
 
 class Color(Tuple):
-    def __init__(self, r: float, g: float, b: float):
-        super().__init__(r, g, b, 0.0)
+    def __init__(self, r: float, g: float, b: float, w: float = 0.0):
+        super().__init__(r, g, b, w)
 
     @property
     def red(self):
@@ -102,8 +106,5 @@ class Color(Tuple):
             g = self.green * other.green
             b = self.blue * other.blue
             return Color(r, g, b)
-        else:
-            r = self.red * other
-            g = self.green * other
-            b = self.blue * other
-            return Color(r, g, b)
+
+        return super().__mul__(other)
