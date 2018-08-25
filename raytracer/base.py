@@ -1,4 +1,3 @@
-from typing import NamedTuple
 import math
 
 EPSILON = 0.00001
@@ -10,30 +9,31 @@ def equal(a: float, b: float) -> bool:
     return False
 
 
-class Tup(NamedTuple):
-    x: float
-    y: float
-    z: float
-    w: float
+class Tuple:
+    def __init__(self, x: float, y: float, z: float, w: float):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
 
     def __add__(self, other):
-        return Tup(
+        return Tuple(
             self.x + other.x, self.y + other.y, self.z + other.z, self.w + other.w
         )
 
     def __sub__(self, other):
-        return Tup(
+        return Tuple(
             self.x - other.x, self.y - other.y, self.z - other.z, self.w - other.w
         )
 
     def __neg__(self):
-        return Tup(-self.x, -self.y, -self.z, -self.w)
+        return Tuple(-self.x, -self.y, -self.z, -self.w)
 
     def __mul__(self, other):
-        return Tup(self.x * other, self.y * other, self.z * other, self.w * other)
+        return Tuple(self.x * other, self.y * other, self.z * other, self.w * other)
 
     def __truediv__(self, other):
-        return Tup(self.x / other, self.y / other, self.z / other, self.w / other)
+        return Tuple(self.x / other, self.y / other, self.z / other, self.w / other)
 
     def __eq__(self, other):
         return (
@@ -43,29 +43,38 @@ class Tup(NamedTuple):
             and equal(self.w, other.w)
         )
 
+    def magnitude(self) -> float:
+        return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
 
-def point(x: float, y: float, z: float) -> Tup:
-    return Tup(x=x, y=y, z=z, w=1.0)
-
-
-def vector(x: float, y: float, z: float) -> Tup:
-    return Tup(x=x, y=y, z=z, w=0.0)
+    def __str__(self) -> str:
+        return f"x: {self.x} , y: {self.y}, z: {self.z}, w: {self.w}"
 
 
-def magnitude(v: Tup) -> float:
-    return math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2 + v.w ** 2)
+class Point(Tuple):
+    def __init__(self, x: float, y: float, z: float):
+        super().__init__(x, y, z, 1.0)
+
+    def __str__(self) -> str:
+        return f"Point: < {self.x}, {self.y}, {self.z}>"
 
 
-def normalize(v: Tup) -> Tup:
-    m = magnitude(v)
-    return Tup(v.x / m, v.y / m, v.z / m, v.w / m)
+class Vector(Tuple):
+    def __init__(self, x: float, y: float, z: float):
+        super().__init__(x, y, z, 0.0)
 
+    def __str__(self) -> str:
+        return f"Vector: < {self.x}, {self.y}, {self.z}>"
 
-def dot(v1: Tup, v2: Tup) -> float:
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w + v2.w
+    def normalize(self):
+        m = self.magnitude()
+        return Tuple(self.x / m, self.y / m, self.z / m, self.w / m)
 
+    def dot(self, other) -> float:
+        return self.x * other.x + self.y * other.y + self.z * other.z + self.w + other.w
 
-def cross(v1: Tup, v2: Tup) -> Tup:
-    return vector(
-        v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x
-    )
+    def cross(self, other):
+        return Vector(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x,
+        )

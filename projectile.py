@@ -1,16 +1,16 @@
-import raytracer.base
+import raytracer.base as rt
 
 from typing import NamedTuple
 
 
 class World(NamedTuple):
-    gravity: Tup
-    wind: Tup
+    gravity: rt.Vector
+    wind: rt.Vector
 
 
 class Projectile(NamedTuple):
-    position: Tup
-    velocity: Tup
+    position: rt.Point
+    velocity: rt.Vector
 
 
 def tick(world: World, p: Projectile) -> Projectile:
@@ -19,15 +19,14 @@ def tick(world: World, p: Projectile) -> Projectile:
     return Projectile(pos, velocity)
 
 
-start = point(0, 1, 0)
-vel = rt.normalize(vector(1, 1, 0)) * 4
-print(vel)
+start = rt.Point(0, 1, 0)
+vel = rt.Vector(1, 1, 0).normalize() * 4
 p = Projectile(start, vel)
-w = World(vector(0, -0.1, 0), vector(-0.01, 0, 0))
+w = World(rt.Vector(0, -0.1, 0), rt.Vector(-0.01, 0, 0))
 
 t = 0
 while p.position.y > 0:
-    print(f"Tick {t}: Position{p.position}")
+    print(f"Tick {t}: Position {p.position}")
     p = tick(w, p)
     t = t + 1
 
