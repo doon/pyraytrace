@@ -80,6 +80,9 @@ class TestTuples(unittest.TestCase):
         v1 = rt.Vector(1, 2, 3)
         v2 = rt.Vector(2, 3, 4)
         self.assertEqual(v1.dot(v2), 20)
+        t1 = rt.Tuple(1, 2, 3, 4)
+        t2 = rt.Tuple(1, 2, 3, 1)
+        self.assertEqual(t1.dot(t2), 18)
 
     def test_crossproduct(self):
         v1 = rt.Vector(1, 2, 3)

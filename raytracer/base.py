@@ -51,6 +51,9 @@ class Tuple:
             and equal(self.w, other.w)
         )
 
+    def dot(self, other) -> float:
+        return self.x * other.x + self.y * other.y + self.z * other.z + self.w * other.w
+
     def magnitude(self) -> float:
         return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
 
@@ -76,9 +79,6 @@ class Vector(Tuple):
     def normalize(self):
         m = self.magnitude()
         return Tuple(self.x / m, self.y / m, self.z / m, self.w / m)
-
-    def dot(self, other) -> float:
-        return self.x * other.x + self.y * other.y + self.z * other.z + self.w + other.w
 
     def cross(self, other):
         return Vector(
@@ -147,6 +147,50 @@ class Canvas:
                 (r, g, b) = elem.to_rgb()
                 ppm_row.extend([r, g, b])
             # break into at most 17 elements per line to say < 70 chars
-            for line in [ppm_row[i:i + 17] for i in range(0, len(ppm_row), 17)]:
+            for line in [ppm_row[i: i + 17] for i in range(0, len(ppm_row), 17)]:
                 pixel_data = pixel_data + " ".join(str(c) for c in line) + "\n"
         return header + pixel_data
+
+
+class Matrix:
+    def __init__(self, matrix):
+        self.size = len(matrix)
+        for x in matrix:
+            if len(x) != self.size:
+                raise TypeError
+        self.matrix = matrix
+
+    def __getitem__(self, key):
+        return self.matrix[key]
+
+    def __setitem__(self, key, value):
+        self.matrix[key] = value
+
+    def __mul__(self, other):
+        # are we multiplying by another matrix
+        if isinstance(other, Matrix):
+            m = [([0] * self.size) for _ in range(self.size)]
+            for row in range(self.size):
+                for col in range(self.size):
+                    sum = 0
+                    for index in range(self.size):
+                        sum += self[row][index] * other[index][col]
+                    m[row][col] = sum
+            return Matrix(m)
+        elif isinstance(other, Tuple):
+            # we are multiply by a tuple
+            return Tuple(
+                Tuple(self[0][0], self[0][1], self[0][2], self[0][3]).dot(other),
+                Tuple(self[1][0], self[1][1], self[1][2], self[1][3]).dot(other),
+                Tuple(self[2][0], self[2][1], self[2][2], self[2][3]).dot(other),
+                Tuple(self[3][0], self[3][1], self[3][2], self[3][3]).dot(other),
+            )
+
+    def __eq__(self, other):
+        return self.matrix == other.matrix
+
+    def __str__(self):
+        output = ""
+        for line in self.matrix:
+            output = output + " ".join(str(x) for x in line) + "\n"
+        return(output)
