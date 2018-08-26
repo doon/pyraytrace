@@ -9,6 +9,10 @@ def equal(a: float, b: float) -> bool:
     return False
 
 
+def clamp(n: float, minn: int, maxn: int) -> int:
+    return int(max(min(maxn, n), minn))
+
+
 class Tuple:
     def __init__(self, x: float, y: float, z: float, w: float):
         self.x = x
@@ -108,3 +112,41 @@ class Color(Tuple):
             return Color(r, g, b)
 
         return super().__mul__(other)
+
+    def to_rgb(self):
+        r = clamp(math.ceil(self.red * 255), 0, 255)
+        g = clamp(math.ceil(self.green * 255), 0, 255)
+        b = clamp(math.ceil(self.blue * 255), 0, 255)
+        return (r, g, b)
+
+
+class Canvas:
+    def __init__(self, width: int, height: int, color: Color = None):
+        self.height = height
+        self.width = width
+        if color is None:
+            color = Color(0, 0, 0)
+        self.pixels = [[color] * width for i in range(height)]
+
+    def write_pixel(self, x: int, y: int, color: Color):
+        self.pixels[y][x] = color
+
+    def pixel_at(self, x: int, y: int):
+        return self.pixels[y][x]
+
+    def _build_header(self):
+        return f"P3\n{self.width} {self.height}\n255\n"
+
+    def to_ppm(self):
+        header = self._build_header()
+        pixel_data = ""
+
+        for row in self.pixels:
+            ppm_row = []
+            for elem in row:
+                (r, g, b) = elem.to_rgb()
+                ppm_row.extend([r, g, b])
+            # break into at most 17 elements per line to say < 70 chars
+            for line in [ppm_row[i:i + 17] for i in range(0, len(ppm_row), 17)]:
+                pixel_data = pixel_data + " ".join(str(c) for c in line) + "\n"
+        return header + pixel_data
