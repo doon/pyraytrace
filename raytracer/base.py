@@ -194,3 +194,20 @@ class Matrix:
         for line in self.matrix:
             output = output + " ".join(str(x) for x in line) + "\n"
         return(output)
+
+    # build an identity matrix
+    @classmethod
+    def identity(cls):
+        return cls([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+        ])
+
+    def transpose(self):
+        m = [([0] * self.size) for _ in range(self.size)]
+        for row in range(self.size):
+                for col in range(self.size):
+                    m[col][row] = self[row][col]
+        return Matrix(m)
