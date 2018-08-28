@@ -1,4 +1,6 @@
+import copy
 import math
+
 
 EPSILON = 0.00001
 
@@ -146,8 +148,8 @@ class Canvas:
             for elem in row:
                 (r, g, b) = elem.to_rgb()
                 ppm_row.extend([r, g, b])
-            # break into at most 17 elements per line to say < 70 chars
-            for line in [ppm_row[i: i + 17] for i in range(0, len(ppm_row), 17)]:
+            # break into at most 17 elements per line to stay < 70 chars
+            for line in [ppm_row[i : i + 17] for i in range(0, len(ppm_row), 17)]:
                 pixel_data = pixel_data + " ".join(str(c) for c in line) + "\n"
         return header + pixel_data
 
@@ -187,27 +189,70 @@ class Matrix:
             )
 
     def __eq__(self, other):
-        return self.matrix == other.matrix
+        if self.size != other.size:
+            return False
+        for row in range(self.size):
+            for col in range(self.size):
+                if not equal(self[row][col], other[row][col]):
+                    return False
+
+        return True
 
     def __str__(self):
         output = ""
         for line in self.matrix:
             output = output + " ".join(str(x) for x in line) + "\n"
-        return(output)
+        return output
 
     # build an identity matrix
     @classmethod
     def identity(cls):
-        return cls([
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-        ])
+        return cls([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
 
     def transpose(self):
         m = [([0] * self.size) for _ in range(self.size)]
         for row in range(self.size):
-                for col in range(self.size):
-                    m[col][row] = self[row][col]
+            for col in range(self.size):
+                m[col][row] = self[row][col]
         return Matrix(m)
+
+    def determinate(self):
+        if self.size == 2:
+            return self[0][0] * self[1][1] - self[0][1] * self[1][0]
+
+        sum = 0
+        for col in range(self.size):
+            sum = sum + self[0][col] * self.cofactor(0, col)
+        return sum
+
+    def sub(self, row, col):
+        tmp = copy.deepcopy(self.matrix)
+        del tmp[row]
+        for row in tmp:
+            del row[col]
+        return Matrix(tmp)
+
+    def minor(self, row, col):
+        return self.sub(row, col).determinate()
+
+    def cofactor(self, row, col):
+        minor = self.minor(row, col)
+        if (row + col) % 2 == 1:
+            minor = -minor
+        return minor
+
+    def invertible(self):
+        return self.determinate() != 0
+
+    def inverse(self):
+        m = [([0] * self.size) for _ in range(self.size)]
+        for row in range(self.size):
+            for col in range(self.size):
+                m[row][col] = self.cofactor(row, col)
+        co_matrix = Matrix(m)
+        co_matrix = co_matrix.transpose()
+        det = self.determinate()
+        for row in range(co_matrix.size):
+            for col in range(co_matrix.size):
+                co_matrix[row][col] = co_matrix[row][col] / det
+        return co_matrix
