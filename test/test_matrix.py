@@ -47,16 +47,16 @@ class TestMatrix(unittest.TestCase):
 
     def test_identity_matrix(self):
         m1 = rt.Matrix([[0, 1, 2, 4], [1, 2, 4, 8], [2, 4, 8, 16], [4, 8, 16, 32]])
-        self.assertEqual(m1 * rt.Matrix.identity(), m1)
+        self.assertEqual(m1 * rt.Identity(), m1)
         t1 = rt.Tuple(1, 2, 3, 4)
-        self.assertEqual(rt.Matrix.identity() * t1, t1)
+        self.assertEqual(rt.Identity() * t1, t1)
 
     def test_transpose(self):
         m1 = rt.Matrix([[0, 9, 3, 0], [9, 8, 0, 8], [1, 8, 5, 3], [0, 0, 5, 8]])
         expected = rt.Matrix([[0, 9, 1, 0], [9, 8, 8, 0], [3, 0, 5, 5], [0, 8, 3, 8]])
         self.assertEqual(m1.transpose(), expected)
-        id = rt.Matrix.identity()
-        self.assertEqual(id.transpose(), rt.Matrix.identity())
+        id = rt.Identity()
+        self.assertEqual(id.transpose(), rt.Identity())
 
     def test_determinate(self):
         m1 = rt.Matrix([[1, 5], [-3, 2]])

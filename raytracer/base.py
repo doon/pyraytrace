@@ -204,11 +204,6 @@ class Matrix:
             output = output + " ".join(str(x) for x in line) + "\n"
         return output
 
-    # build an identity matrix
-    @classmethod
-    def identity(cls):
-        return cls([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-
     def transpose(self):
         m = [([0] * self.size) for _ in range(self.size)]
         for row in range(self.size):
@@ -258,21 +253,22 @@ class Matrix:
         return co_matrix
 
 
-class Translation(Matrix):
+class Identity(Matrix):
+    def __init__(self):
+        super().__init__([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+
+
+class Translation(Identity):
     def __init__(self, x, y, z):
-        identity = Matrix.identity()
-        self.matrix = identity.matrix
-        self.size = identity.size
+        super().__init__()
         self[0][3] = x
         self[1][3] = y
         self[2][3] = z
 
 
-class Scaling(Matrix):
+class Scaling(Identity):
     def __init__(self, x, y, z):
-        identity = Matrix.identity()
-        self.matrix = identity.matrix
-        self.size = identity.size
+        super().__init__()
         self[0][0] = x
         self[1][1] = y
         self[2][2] = z
