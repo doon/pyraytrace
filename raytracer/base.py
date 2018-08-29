@@ -272,3 +272,44 @@ class Scaling(Identity):
         self[0][0] = x
         self[1][1] = y
         self[2][2] = z
+
+
+class RotationX(Matrix):
+    def __init__(self, r):
+        super().__init__(
+            [
+                [1, 0, 0, 0],
+                [0, math.cos(r), -math.sin(r), 0],
+                [0, math.sin(r), math.cos(r), 0],
+                [0, 0, 0, 1],
+            ]
+        )
+
+
+class RotationY(Matrix):
+    def __init__(self, r):
+        super().__init__(
+            [
+                [math.cos(r), 0, math.sin(r), 0],
+                [0, 1, 0, 0],
+                [-math.sin(r), 0, math.cos(r), 0],
+                [0, 0, 0, 1],
+            ]
+        )
+
+
+class RotationZ(Matrix):
+    def __init__(self, r):
+        super().__init__(
+            [
+                [math.cos(r), -math.sin(r), 0, 0],
+                [math.sin(r), math.cos(r), 0, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+            ]
+        )
+
+
+class Shearing(Matrix):
+    def __init__(self, xy, xz, yx, yz, zx, zy):
+        super().__init__([[1, xy, xz, 0], [yx, 1, yz, 0], [zx, zy, 1, 0], [0, 0, 0, 1]])
