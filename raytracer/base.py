@@ -256,3 +256,23 @@ class Matrix:
             for col in range(co_matrix.size):
                 co_matrix[row][col] = co_matrix[row][col] / det
         return co_matrix
+
+
+class Translation(Matrix):
+    def __init__(self, x, y, z):
+        identity = Matrix.identity()
+        self.matrix = identity.matrix
+        self.size = identity.size
+        self[0][3] = x
+        self[1][3] = y
+        self[2][3] = z
+
+
+class Scaling(Matrix):
+    def __init__(self, x, y, z):
+        identity = Matrix.identity()
+        self.matrix = identity.matrix
+        self.size = identity.size
+        self[0][0] = x
+        self[1][1] = y
+        self[2][2] = z
