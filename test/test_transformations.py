@@ -111,7 +111,7 @@ class TestTransformations(unittest.TestCase):
         expected = rt.Point(2, 3, 6)
         self.assertEqual(transform * p, expected)
 
-    def test_shearing_z_to_x(self):
+    def test_shearing_z_to_y(self):
         transform = rt.Shearing(0, 0, 0, 0, 0, 1)
         p = rt.Point(2, 3, 4)
         expected = rt.Point(2, 3, 7)
