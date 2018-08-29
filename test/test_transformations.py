@@ -116,3 +116,23 @@ class TestTransformations(unittest.TestCase):
         p = rt.Point(2, 3, 4)
         expected = rt.Point(2, 3, 7)
         self.assertEqual(transform * p, expected)
+
+    def test_transforms_in_sequence(self):
+        p = rt.Point(1, 0, 1)
+        a = rt.RotationX(math.pi / 2)
+        b = rt.Scaling(5, 5, 5)
+        c = rt.Translation(10, 5, 7)
+        p2 = a * p
+        self.assertEqual(p2, rt.Point(1, -1, 0))
+        p3 = b * p2
+        self.assertEqual(p3, rt.Point(5, -5, 0))
+        p4 = c * p3
+        self.assertEqual(p4, rt.Point(15, 0, 7))
+
+    def test_transforms_chained_reverse(self):
+        p = rt.Point(1, 0, 1)
+        a = rt.RotationX(math.pi / 2)
+        b = rt.Scaling(5, 5, 5)
+        c = rt.Translation(10, 5, 7)
+        t = c * b * a
+        self.assertEqual(t * p, rt.Point(15, 0, 7))
