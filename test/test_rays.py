@@ -112,3 +112,17 @@ class TestRays(unittest.TestCase):
         xs = rays.Intersections(i1, i2, i3, i4)
         h = xs.hit()
         self.assertEqual(h, i4)
+
+    def test_translate_ray(self):
+        r = rays.Ray(rt.Point(1, 2, 3), rt.Vector(0, 1, 0))
+        m = rt.Translation(3, 4, 5)
+        r2 = r.transform(m)
+        self.assertEqual(r2.origin, rt.Point(4, 6, 8))
+        self.assertEqual(r2.direction, rt.Vector(0, 1, 0))
+
+    def test_scale_ray(self):
+        r = rays.Ray(rt.Point(1, 2, 3), rt.Vector(0, 1, 0))
+        m = rt.Scaling(2, 3, 4)
+        r2 = r.transform(m)
+        self.assertEqual(r2.origin, rt.Point(2, 6, 12))
+        self.assertEqual(r2.direction, rt.Vector(0, 3, 0))

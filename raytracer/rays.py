@@ -11,9 +11,10 @@ class Ray:
         return self.origin + self.direction * time
 
     def intersects(self, obj):
-        obj_to_ray = self.origin - obj.origin
-        a = self.direction.dot(self.direction)
-        b = 2 * self.direction.dot(obj_to_ray)
+        ray = self.transform(obj.transform.inverse())
+        obj_to_ray = ray.origin - obj.origin
+        a = ray.direction.dot(ray.direction)
+        b = 2 * ray.direction.dot(obj_to_ray)
         c = obj_to_ray.dot(obj_to_ray) - 1
 
         discriminant = b ** 2 - 4 * a * c
@@ -26,6 +27,9 @@ class Ray:
         if t1 > t2:
             return Intersections(Intersection(t2, obj), Intersection(t1, obj))
         return Intersections(Intersection(t1, obj), Intersection(t2, obj))
+
+    def transform(self, m: rt.Matrix):
+        return Ray(m * self.origin, m * self.direction)
 
 
 class Intersection:
@@ -41,6 +45,6 @@ class Intersections(list):
     def hit(self) -> Intersection:
         hit = None
         for i in self:
-            if i.t > 0 and ( hit is None or i.t < hit.t):
+            if i.t > 0 and (hit is None or i.t < hit.t):
                 hit = i
         return hit

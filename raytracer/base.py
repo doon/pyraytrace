@@ -319,3 +319,7 @@ class Sphere:
     def __init__(self):
         self.origin = Point(0, 0, 0)
         self.radius = 1
+        self.transform = Identity()
+
+    def set_transform(self, transform: Matrix):
+        self.transform *= transform
