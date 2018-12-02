@@ -59,6 +59,10 @@ class Tuple:
     def magnitude(self) -> float:
         return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
 
+    def normalize(self):
+        m = self.magnitude()
+        return Tuple(self.x / m, self.y / m, self.z / m, self.w / m)
+
     def __str__(self) -> str:
         return f"x: {self.x} , y: {self.y}, z: {self.z}, w: {self.w}"
 
@@ -77,10 +81,6 @@ class Vector(Tuple):
 
     def __str__(self) -> str:
         return f"Vector: < {self.x}, {self.y}, {self.z}>"
-
-    def normalize(self):
-        m = self.magnitude()
-        return Tuple(self.x / m, self.y / m, self.z / m, self.w / m)
 
     def cross(self, other):
         return Vector(
