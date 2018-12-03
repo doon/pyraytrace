@@ -316,20 +316,3 @@ class RotationZ(Matrix):
 class Shearing(Matrix):
     def __init__(self, xy, xz, yx, yz, zx, zy):
         super().__init__([[1, xy, xz, 0], [yx, 1, yz, 0], [zx, zy, 1, 0], [0, 0, 0, 1]])
-
-
-class Sphere:
-    def __init__(self):
-        self.origin = Point(0, 0, 0)
-        self.radius = 1
-        self.transform = Identity()
-
-    def set_transform(self, transform: Matrix):
-        self.transform *= transform
-
-    def normal_at(self, world_point: Point):
-        obj_point = self.transform.inverse() * world_point
-        object_normal = obj_point - self.origin
-        world_normal = self.transform.inverse().transpose() * object_normal
-        world_normal.w = 0
-        return world_normal.normalize()

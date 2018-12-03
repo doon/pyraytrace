@@ -1,6 +1,7 @@
 import unittest
 import raytracer.base as rt
 import raytracer.rays as rays
+from raytracer.spheres import Sphere
 
 
 class TestRays(unittest.TestCase):
@@ -20,7 +21,7 @@ class TestRays(unittest.TestCase):
 
     def test_intersects_sphere(self):
         r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
-        s = rt.Sphere()
+        s = Sphere()
         xs = r.intersects(s)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
@@ -28,7 +29,7 @@ class TestRays(unittest.TestCase):
 
     def test_intersects_sphere_at_tangent(self):
         r = rays.Ray(rt.Point(0, 1, -5), rt.Vector(0, 0, 1))
-        s = rt.Sphere()
+        s = Sphere()
         xs = r.intersects(s)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 5)
@@ -36,13 +37,13 @@ class TestRays(unittest.TestCase):
 
     def test_misses_sphere(self):
         r = rays.Ray(rt.Point(0, 2, -5), rt.Vector(0, 0, 1))
-        s = rt.Sphere()
+        s = Sphere()
         xs = r.intersects(s)
         self.assertEqual(len(xs), 0)
 
     def test_originates_inside_sphere(self):
         r = rays.Ray(rt.Point(0, 0, 0), rt.Vector(0, 0, 1))
-        s = rt.Sphere()
+        s = Sphere()
         xs = r.intersects(s)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, -1)
@@ -50,20 +51,20 @@ class TestRays(unittest.TestCase):
 
     def test_spehere_behind_ray(self):
         r = rays.Ray(rt.Point(0, 0, 5), rt.Vector(0, 0, 1))
-        s = rt.Sphere()
+        s = Sphere()
         xs = r.intersects(s)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, -6)
         self.assertEqual(xs[1].t, -4)
 
     def test_intersection(self):
-        s = rt.Sphere()
+        s = Sphere()
         i = rays.Intersection(3.5, s)
         self.assertEqual(i.object, s)
         self.assertEqual(i.t, 3.5)
 
     def test_aggregating_intersections(self):
-        s = rt.Sphere()
+        s = Sphere()
         i1 = rays.Intersection(1, s)
         i2 = rays.Intersection(2, s)
         xs = rays.Intersections(i1, i2)
@@ -73,14 +74,14 @@ class TestRays(unittest.TestCase):
 
     def test_intersects_object(self):
         r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
-        s = rt.Sphere()
+        s = Sphere()
         xs = r.intersects(s)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].object, s)
         self.assertEqual(xs[1].object, s)
 
     def test_hit_when_all_positive(self):
-        s = rt.Sphere()
+        s = Sphere()
         i1 = rays.Intersection(1, s)
         i2 = rays.Intersection(2, s)
         xs = rays.Intersections(i2, i1)
@@ -88,7 +89,7 @@ class TestRays(unittest.TestCase):
         self.assertEqual(h, i1)
 
     def test_hit_when_some_negative(self):
-        s = rt.Sphere()
+        s = Sphere()
         i1 = rays.Intersection(-1, s)
         i2 = rays.Intersection(2, s)
         xs = rays.Intersections(i2, i1)
@@ -96,7 +97,7 @@ class TestRays(unittest.TestCase):
         self.assertEqual(h, i2)
 
     def test_hit_when_all_negative(self):
-        s = rt.Sphere()
+        s = Sphere()
         i1 = rays.Intersection(-2, s)
         i2 = rays.Intersection(-1, s)
         xs = rays.Intersections(i2, i1)
@@ -104,7 +105,7 @@ class TestRays(unittest.TestCase):
         self.assertIsNone(h)
 
     def test_hit_is_lowest_non_negative_intersection(self):
-        s = rt.Sphere()
+        s = Sphere()
         i1 = rays.Intersection(5, s)
         i2 = rays.Intersection(7, s)
         i3 = rays.Intersection(-3, s)
