@@ -63,6 +63,9 @@ class Tuple:
         m = self.magnitude()
         return Tuple(self.x / m, self.y / m, self.z / m, self.w / m)
 
+    def reflect(self, normal):
+        return self - normal * 2 * self.dot(normal)
+
     def __str__(self) -> str:
         return f"x: {self.x} , y: {self.y}, z: {self.z}, w: {self.w}"
 

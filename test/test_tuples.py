@@ -89,3 +89,15 @@ class TestTuples(unittest.TestCase):
         v2 = rt.Vector(2, 3, 4)
         self.assertEqual(v1.cross(v2), rt.Vector(-1, 2, -1))
         self.assertEqual(v2.cross(v1), rt.Vector(1, -2, 1))
+
+    def test_reflect_vector_at_45(self):
+        v = rt.Vector(1, -1, 0)
+        n = rt.Vector(0, 1, 0)
+        r = v.reflect(n)
+        self.assertEqual(r, rt.Vector(1, 1, 0))
+
+    def test_reflect_vector_slanted(self):
+        v = rt.Vector(0, -1, 0)
+        n = rt.Vector(math.sqrt(2) / 2, math.sqrt(2) / 2, 0)
+        r = v.reflect(n)
+        self.assertEqual(r, rt.Vector(1, 0, 0))
