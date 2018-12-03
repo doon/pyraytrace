@@ -323,3 +323,10 @@ class Sphere:
 
     def set_transform(self, transform: Matrix):
         self.transform *= transform
+
+    def normal_at(self, world_point: Point):
+        obj_point = self.transform.inverse() * world_point
+        object_normal = obj_point - self.origin
+        world_normal = self.transform.inverse().transpose() * object_normal
+        world_normal.w = 0
+        return world_normal.normalize()
