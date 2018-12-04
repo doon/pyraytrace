@@ -1,4 +1,5 @@
 import raytracer.base as rt
+from raytracer.lights import PointLight
 
 
 class Material:
@@ -15,3 +16,22 @@ class Material:
         self.diffuse = diffuse
         self.specular = specular
         self.shininess = shininess
+
+    def lighting(
+        self, eyev: rt.Vector, normalv: rt.Vector, point: rt.Point, light: PointLight
+    ):
+        diffuse = rt.Color(0, 0, 0)
+        specular = rt.Color(0, 0, 0)
+        effective_color = self.color * light.intensity
+        lightv = (light.position - point).normalize()
+        ambient = effective_color * self.ambient
+        light_dot_normal = lightv.dot(normalv)
+        if light_dot_normal >= 0:
+            diffuse = effective_color * self.diffuse * light_dot_normal
+            reflectv = -lightv.reflect(normalv)
+            reflect_dot_eye = reflectv.dot(eyev)
+            if reflect_dot_eye > 0:
+                factor = pow(reflect_dot_eye, self.shininess)
+                specular = light.intensity * self.specular * factor
+
+        return ambient + diffuse + specular
