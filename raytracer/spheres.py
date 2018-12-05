@@ -8,6 +8,13 @@ class Sphere:
         self.radius = 1
         self.transform = rt.Identity()
 
+    def __eq__(self, other):
+        return (
+            self.origin == other.origin
+            and self.radius == other.radius
+            and self.transform == other.transform
+        )
+
     def set_transform(self, transform: rt.Matrix):
         self.transform *= transform
 
