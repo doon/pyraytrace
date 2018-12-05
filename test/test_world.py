@@ -1,5 +1,6 @@
 import unittest
 import raytracer.base as rt
+import raytracer.rays as ray
 from raytracer.spheres import Sphere
 from raytracer.lights import PointLight
 from raytracer.materials import Material
@@ -23,3 +24,13 @@ class TestWorlds(unittest.TestCase):
         self.assertEqual(world.light, light)
         self.assertIn(s1, world.objects)
         self.assertIn(s2, world.objects)
+
+    def test_intersect_world_with_ray(self):
+        world = World.default()
+        r = ray.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        xs = world.intersect(r)
+        self.assertEqual(len(xs), 4)
+        self.assertEqual(xs[0].t, 4)
+        self.assertEqual(xs[1].t, 4.5)
+        self.assertEqual(xs[2].t, 5.5)
+        self.assertEqual(xs[3].t, 6)

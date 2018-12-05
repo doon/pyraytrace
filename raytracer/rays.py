@@ -37,6 +37,9 @@ class Intersection:
         self.object = object
         self.t = t
 
+    def __lt__(self, other):
+        return self.t < other.t
+
 
 class Intersections(list):
     def __init__(self, *args):

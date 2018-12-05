@@ -2,6 +2,7 @@ from raytracer.lights import PointLight
 from raytracer.spheres import Sphere
 from raytracer.materials import Material
 import raytracer.base as rt
+import raytracer.rays as ray
 
 
 class World:
@@ -21,3 +22,9 @@ class World:
         world.objects.append(s1)
         world.objects.append(s2)
         return world
+
+    def intersect(self, ray: ray.Ray):
+        xs = []
+        for obj in self.objects:
+            xs.extend(ray.intersects(obj))
+        return sorted(xs)
