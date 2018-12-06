@@ -7,6 +7,7 @@ class Sphere:
         self.origin = rt.Point(0, 0, 0)
         self.radius = 1
         self.transform = rt.Identity()
+        self.material = mat.Material()
 
     def __eq__(self, other):
         return (

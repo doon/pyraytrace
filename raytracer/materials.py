@@ -17,6 +17,15 @@ class Material:
         self.specular = specular
         self.shininess = shininess
 
+    def __eq__(self, other):
+        return (
+            self.color == other.color
+            and self.ambient == other.ambient
+            and self.diffuse == other.diffuse
+            and self.specular == other.specular
+            and self.shininess == other.shininess
+        )
+
     def lighting(
         self, eyev: rt.Vector, normalv: rt.Vector, point: rt.Point, light: PointLight
     ):

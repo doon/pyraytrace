@@ -76,5 +76,4 @@ class TestSpheres(unittest.TestCase):
     def test_sphere_has_default_material(self):
         s = Sphere()
         m = mat.Material()
-        s.set_material(m)
         self.assertEqual(s.material, m)
