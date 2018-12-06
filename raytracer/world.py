@@ -27,9 +27,18 @@ class World:
         xs = rays.Intersections()
         for obj in self.objects:
             xs.extend(ray.intersects(obj))
-        return sorted(xs)
+        xs.sort()
+        return xs
 
     def shade_hit(self, comps: rays.Comps):
         return comps.object.material.lighting(
             comps.eyev, comps.normalv, comps.point, self.light
         )
+
+    def color_at(self, ray: rays.Ray):
+        xs = self.intersect(ray)
+        hit = xs.hit()
+        if hit is None:
+            return rt.Color(0, 0, 0)
+        else:
+            return self.shade_hit(hit.prepare_computations(ray))

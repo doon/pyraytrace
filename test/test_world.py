@@ -53,3 +53,25 @@ class TestWorlds(unittest.TestCase):
         comps = i.prepare_computations(r)
         c = w.shade_hit(comps)
         self.assertEqual(c, rt.Color(0.90498, 0.90498, 0.90498))
+
+    def test_color_at_when_ray_misses(self):
+        w = World.default()
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 1, 0))
+        c = w.color_at(r)
+        self.assertEqual(c, rt.Color(0, 0, 0))
+
+    def test_color_at_when_ray_hits(self):
+        w = World.default()
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        c = w.color_at(r)
+        self.assertEqual(c, rt.Color(0.38066, 0.47583, 0.2855))
+
+    def test_color_at_with_intersection_behind_the_ray(self):
+        w = World.default()
+        outer = w.objects[0]
+        outer.material.ambient = 1
+        inner = w.objects[1]
+        inner.material.ambient = 1
+        r = rays.Ray(rt.Point(0, 0, 0.75), rt.Vector(0, 0, -1))
+        c = w.color_at(r)
+        self.assertEqual(c, inner.material.color)
