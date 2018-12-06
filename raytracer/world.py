@@ -24,7 +24,7 @@ class World:
         return world
 
     def intersect(self, ray: rays.Ray):
-        xs = []
+        xs = rays.Intersections()
         for obj in self.objects:
             xs.extend(ray.intersects(obj))
         return sorted(xs)
