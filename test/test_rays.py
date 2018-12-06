@@ -127,3 +127,31 @@ class TestRays(unittest.TestCase):
         r2 = r.transform(m)
         self.assertEqual(r2.origin, rt.Point(2, 6, 12))
         self.assertEqual(r2.direction, rt.Vector(0, 3, 0))
+
+    def test_precomputing_state_of_intersection(self):
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        shape = Sphere()
+        i = rays.Intersection(4, shape)
+        comps = i.prepare_computations(r)
+        self.assertEqual(comps.t, i.t)
+        self.assertEqual(comps.object, i.object)
+        self.assertEqual(comps.point, rt.Point(0, 0, -1))
+        self.assertEqual(comps.eyev, rt.Vector(0, 0, -1))
+        self.assertEqual(comps.normalv, rt.Vector(0, 0, -1))
+
+    def test_hit_when_intersection_outside(self):
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        shape = Sphere()
+        i = rays.Intersection(4, shape)
+        comps = i.prepare_computations(r)
+        self.assertFalse(comps.inside)
+
+    def test_hit_when_intersection_inside(self):
+        r = rays.Ray(rt.Point(0, 0, 0), rt.Vector(0, 0, 1))
+        shape = Sphere()
+        i = rays.Intersection(1, shape)
+        comps = i.prepare_computations(r)
+        self.assertEqual(comps.point, rt.Point(0, 0, 1))
+        self.assertEqual(comps.eyev, rt.Vector(0, 0, -1))
+        self.assertEqual(comps.normalv, rt.Vector(0, 0, -1))
+        self.assertTrue(comps.inside)

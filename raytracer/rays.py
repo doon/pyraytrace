@@ -1,5 +1,6 @@
 import raytracer.base as rt
 import math
+from typing import NamedTuple, Any
 
 
 class Ray:
@@ -32,6 +33,15 @@ class Ray:
         return Ray(m * self.origin, m * self.direction)
 
 
+class Comps(NamedTuple):
+    t: float
+    object: Any
+    point: rt.Point
+    eyev: rt.Vector
+    normalv: rt.Vector
+    inside: bool
+
+
 class Intersection:
     def __init__(self, t: float, object):
         self.object = object
@@ -39,6 +49,18 @@ class Intersection:
 
     def __lt__(self, other):
         return self.t < other.t
+
+    def prepare_computations(self, ray: Ray):
+        point = ray.position(self.t)
+        normalv = self.object.normal_at(point)
+        eyev = -ray.direction
+        inside = False
+
+        if normalv.dot(eyev) < 0:
+            inside = True
+            normalv = -normalv
+
+        return Comps(self.t, self.object, point, -ray.direction, normalv, inside)
 
 
 class Intersections(list):
