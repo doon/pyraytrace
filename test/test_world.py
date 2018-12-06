@@ -1,6 +1,6 @@
 import unittest
 import raytracer.base as rt
-import raytracer.rays as ray
+import raytracer.rays as rays
 from raytracer.spheres import Sphere
 from raytracer.lights import PointLight
 from raytracer.materials import Material
@@ -14,7 +14,7 @@ class TestWorlds(unittest.TestCase):
         self.assertEqual(len(world.objects), 0)
 
     def test_default_world(self):
-        light = PointLight(rt.Point(-10, 10, 10), rt.Color(1, 1, 1))
+        light = PointLight(rt.Point(-10, 10, -10), rt.Color(1, 1, 1))
         s1 = Sphere()
         m = Material(color=rt.Color(0.8, 1.0, 0.6), diffuse=0.7, specular=0.2)
         s1.set_material(m)
@@ -27,10 +27,29 @@ class TestWorlds(unittest.TestCase):
 
     def test_intersect_world_with_ray(self):
         world = World.default()
-        r = ray.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
         xs = world.intersect(r)
         self.assertEqual(len(xs), 4)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 4.5)
         self.assertEqual(xs[2].t, 5.5)
         self.assertEqual(xs[3].t, 6)
+
+    def test_shading_intersection(self):
+        w = World.default()
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        shape = w.objects[0]
+        i = rays.Intersection(4, shape)
+        comps = i.prepare_computations(r)
+        c = w.shade_hit(comps)
+        self.assertEqual(c, rt.Color(0.38066, 0.47583, 0.2855))
+
+    def test_shading_intersection_from_inside(self):
+        w = World.default()
+        w.light = PointLight(rt.Point(0, 0.25, 0), rt.Color(1, 1, 1))
+        r = rays.Ray(rt.Point(0, 0, 0), rt.Vector(0, 0, 1))
+        shape = w.objects[1]
+        i = rays.Intersection(0.5, shape)
+        comps = i.prepare_computations(r)
+        c = w.shade_hit(comps)
+        self.assertEqual(c, rt.Color(0.90498, 0.90498, 0.90498))
