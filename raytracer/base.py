@@ -61,13 +61,20 @@ class Tuple:
 
     def normalize(self):
         m = self.magnitude()
-        return Tuple(self.x / m, self.y / m, self.z / m, self.w / m)
+        return self.__class__(self.x / m, self.y / m, self.z / m, self.w / m)
 
     def reflect(self, normal):
         return self - normal * 2 * self.dot(normal)
 
     def __str__(self) -> str:
         return f"x: {self.x} , y: {self.y}, z: {self.z}, w: {self.w}"
+
+    def cross(self, other):
+        return self.__class__(
+            self.y * other.z - self.z * other.y,
+            self.z * other.x - self.x * other.z,
+            self.x * other.y - self.y * other.x,
+        )
 
 
 class Point(Tuple):
@@ -84,13 +91,6 @@ class Vector(Tuple):
 
     def __str__(self) -> str:
         return f"Vector: < {self.x}, {self.y}, {self.z}>"
-
-    def cross(self, other):
-        return Vector(
-            self.y * other.z - self.z * other.y,
-            self.z * other.x - self.x * other.z,
-            self.x * other.y - self.y * other.x,
-        )
 
 
 class Color(Tuple):
@@ -316,3 +316,21 @@ class RotationZ(Matrix):
 class Shearing(Matrix):
     def __init__(self, xy, xz, yx, yz, zx, zy):
         super().__init__([[1, xy, xz, 0], [yx, 1, yz, 0], [zx, zy, 1, 0], [0, 0, 0, 1]])
+
+    # class ViewTransform(Matrix):
+
+
+def ViewTransform(frm: Point, to: Point, up: Vector) -> Matrix:
+    forward = (to - frm).normalize()
+    upn = up.normalize()
+    left = forward.cross(upn)
+    true_up = left.cross(forward)
+    orientation = Matrix(
+        [
+            [left.x, left.y, left.z, 0],
+            [true_up.x, true_up.y, true_up.z, 0],
+            [-forward.x, -forward.y, -forward.z, 0],
+            [0, 0, 0, 1],
+        ]
+    )
+    return orientation * Translation(-frm.x, -frm.y, -frm.z)
