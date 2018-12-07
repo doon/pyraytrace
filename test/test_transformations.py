@@ -136,3 +136,39 @@ class TestTransformations(unittest.TestCase):
         c = rt.Translation(10, 5, 7)
         t = c * b * a
         self.assertEqual(t * p, rt.Point(15, 0, 7))
+
+    def test_transformation_matrix_for_default_orientation(self):
+        frm = rt.Point(0, 0, 0)
+        to = rt.Point(0, 0, -1)
+        up = rt.Vector(0, 1, 0)
+        t = rt.ViewTransform(frm, to, up)
+        self.assertEqual(t, rt.Identity())
+
+    def test_view_transformation_matrix_in_positive_z_direction(self):
+        frm = rt.Point(0, 0, 0)
+        to = rt.Point(0, 0, 1)
+        up = rt.Vector(0, 1, 0)
+        t = rt.ViewTransform(frm, to, up)
+        self.assertEqual(t, rt.Scaling(-1, 1, -1))
+
+    def test_view_transform_moves_the_world(self):
+        frm = rt.Point(0, 0, 8)
+        to = rt.Point(0, 0, 0)
+        up = rt.Vector(0, 1, 0)
+        t = rt.ViewTransform(frm, to, up)
+        self.assertEqual(t, rt.Translation(0, 0, -8))
+
+    def test_arbitrary_view_transformation(self):
+        frm = rt.Point(1, 3, 2)
+        to = rt.Point(4, -2, 8)
+        up = rt.Vector(1, 1, 0)
+        t = rt.ViewTransform(frm, to, up)
+        expected = rt.Matrix(
+            [
+                [-0.50709, 0.50709, 0.67612, -2.36643],
+                [0.76772, 0.60609, 0.12122, -2.82843],
+                [-0.35857, 0.59761, -0.71714, 0.00000],
+                [0.00000, 0.00000, 0.00000, 1.00000],
+            ]
+        )
+        self.assertEqual(t, expected)
