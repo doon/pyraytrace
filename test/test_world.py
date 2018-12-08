@@ -75,3 +75,23 @@ class TestWorlds(unittest.TestCase):
         r = rays.Ray(rt.Point(0, 0, 0.75), rt.Vector(0, 0, -1))
         c = w.color_at(r)
         self.assertEqual(c, inner.material.color)
+
+    def test_no_shadow_when_nothing_is_colinear(self):
+        w = World.default()
+        p = rt.Point(0, 10, 10)
+        self.assertFalse(w.shadowed(p))
+
+    def test_shadow_with_between_point_light(self):
+        w = World.default()
+        p = rt.Point(10, -10, 10)
+        self.assertTrue(w.shadowed(p))
+
+    def test_no_shadow_when_object_behind_light(self):
+        w = World.default()
+        p = rt.Point(-20, 20, -20)
+        self.assertFalse(w.shadowed(p))
+
+    def test_no_shadow_when_object_behind_point(self):
+        w = World.default()
+        p = rt.Point(-2, 2, -2)
+        self.assertFalse(w.shadowed(p))

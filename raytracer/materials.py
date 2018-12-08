@@ -27,13 +27,21 @@ class Material:
         )
 
     def lighting(
-        self, eyev: rt.Vector, normalv: rt.Vector, point: rt.Point, light: PointLight
+        self,
+        eyev: rt.Vector,
+        normalv: rt.Vector,
+        point: rt.Point,
+        light: PointLight,
+        inShadow: bool = False,
     ):
         diffuse = rt.Color(0, 0, 0)
         specular = rt.Color(0, 0, 0)
         effective_color = self.color * light.intensity
-        lightv = (light.position - point).normalize()
         ambient = effective_color * self.ambient
+        if inShadow:
+            return ambient
+
+        lightv = (light.position - point).normalize()
         light_dot_normal = lightv.dot(normalv)
         if light_dot_normal >= 0:
             diffuse = effective_color * self.diffuse * light_dot_normal

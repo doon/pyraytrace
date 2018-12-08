@@ -52,3 +52,11 @@ class TestMaterials(unittest.TestCase):
         light = PointLight(rt.Point(0, 0, 10), rt.Color(1, 1, 1))
         result = self.m.lighting(eyev, normalv, self.pos, light)
         self.assertEqual(result, rt.Color(0.1, 0.1, 0.1))
+
+    def test_lighting_with_surface_in_shadow(self):
+        eyev = rt.Vector(0, 0, -1)
+        normalv = rt.Vector(0, 0, -1)
+        light = PointLight(rt.Point(0, 0, -10), rt.Color(1, 1, 1))
+        inShadow = True
+        result = self.m.lighting(eyev, normalv, self.pos, light, inShadow)
+        self.assertEqual(result, rt.Color(0.1, 0.1, 0.1))

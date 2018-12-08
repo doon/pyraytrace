@@ -42,3 +42,14 @@ class World:
             return rt.Color(0, 0, 0)
         else:
             return self.shade_hit(hit.prepare_computations(ray))
+
+    def shadowed(self, point: rt.Point):
+        v = self.light.position
+        distance = v.magnitude()
+        direction = v.normalize()
+        r = rays.Ray(point, direction)
+        xs = self.intersect(r)
+        h = xs.hit()
+        if h is not None and h.t < distance:
+            return True
+        return False
