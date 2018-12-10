@@ -45,17 +45,12 @@ class World:
             return self.shade_hit(hit.prepare_computations(ray))
 
     def shadowed(self, point: rt.Point):
-        # print("in Shadowed")
-        # print(f"Light: {self.light.position} Point: {point}")
         v = self.light.position - point
         distance = v.magnitude()
         direction = v.normalize()
         r = rays.Ray(point, direction)
-        # print(r)
-        # print(f"v: {v}\ndistance:{distance}\ndirection: {direction}")
         xs = self.intersect(r)
         h = xs.hit()
-        # print(h)
         if h is not None and h.t < distance:
             return True
         return False
