@@ -25,6 +25,9 @@ class Shape:
     def set_material(self, material: Material):
         self.material = material
 
+    def __str__(self):
+        return f"Material:{self.material}\nTransform:\n {self.transform}"
+
 
 class TestShape(Shape):
     def __init__(self):
@@ -72,4 +75,20 @@ class Sphere(Shape):
         )
 
     def __str__(self):
-        return f"Sphere:\nOrigin: {self.origin}\nMaterial:{self.material}\nTransform:\n {self.transform}"
+        desc = f"Sphere:\nOrigin: {self.origin}\nRadius: {self.radius}\n"
+        return desc + super().__str__()
+
+
+class Plane(Shape):
+    def __init__(self):
+        super().__init__()
+
+    def object_normal(self, point: Point):
+        return Vector(0, 1, 0)
+
+    def local_intersect(self, ray: Ray):
+        if abs(ray.direction.y) < EPSILON:
+            return Intersections()
+
+        t = -ray.origin.y / ray.direction.y
+        return Intersections(Intersection(t, self))
