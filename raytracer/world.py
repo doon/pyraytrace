@@ -31,8 +31,9 @@ class World:
         return xs
 
     def shade_hit(self, comps: rays.Comps):
+        shadow = self.shadowed(comps.over_point)
         return comps.object.material.lighting(
-            comps.eyev, comps.normalv, comps.point, self.light
+            comps.eyev, comps.normalv, comps.point, self.light, shadow
         )
 
     def color_at(self, ray: rays.Ray):
@@ -44,12 +45,23 @@ class World:
             return self.shade_hit(hit.prepare_computations(ray))
 
     def shadowed(self, point: rt.Point):
-        v = self.light.position
+        # print("in Shadowed")
+        # print(f"Light: {self.light.position} Point: {point}")
+        v = self.light.position - point
         distance = v.magnitude()
         direction = v.normalize()
         r = rays.Ray(point, direction)
+        # print(r)
+        # print(f"v: {v}\ndistance:{distance}\ndirection: {direction}")
         xs = self.intersect(r)
         h = xs.hit()
+        # print(h)
         if h is not None and h.t < distance:
             return True
         return False
+
+    def __str__(self):
+        str = f"world: Light: {self.light}\nObjects:\n"
+        for obj in self.objects:
+            str = str + f"{obj}\n"
+        return str

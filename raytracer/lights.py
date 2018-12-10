@@ -8,3 +8,8 @@ class PointLight:
 
     def __eq__(self, other):
         return self.position == other.position and self.intensity == other.intensity
+
+    def __str__(self):
+        return (
+            f"PointLight:\nPosition: {self.position}\nIntesity: {self.intensity}"
+        )

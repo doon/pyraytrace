@@ -95,3 +95,17 @@ class TestWorlds(unittest.TestCase):
         w = World.default()
         p = rt.Point(-2, 2, -2)
         self.assertFalse(w.shadowed(p))
+
+    def test_shade_hit_when_interection_in_shadow(self):
+        w = World()
+        w.light = PointLight(rt.Point(0, 0, -10), rt.Color(1, 1, 1))
+        s1 = Sphere()
+        w.objects.append(s1)
+        s2 = Sphere()
+        s2.set_transform(rt.Translation(0, 0, 10))
+        w.objects.append(s2)
+        r = rays.Ray(rt.Point(0, 0, 5), rt.Vector(0, 0, 1))
+        i = rays.Intersection(4, s2)
+        comps = i.prepare_computations(r)
+        c = w.shade_hit(comps)
+        self.assertEqual(c, rt.Color(0.1, 0.1, 0.1))

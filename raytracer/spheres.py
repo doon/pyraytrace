@@ -28,3 +28,6 @@ class Sphere:
 
     def set_material(self, material: mat.Material):
         self.material = material
+
+    def __str__(self):
+        return f"Sphere:\nOrigin: {self.origin}\nMaterial:{self.material}\nTransform:\n {self.transform}"

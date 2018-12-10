@@ -124,6 +124,9 @@ class Color(Tuple):
         b = clamp(math.ceil(self.blue * 255), 0, 255)
         return (r, g, b)
 
+    def __str__(self):
+        return f"Color: R: {self.red} G: {self.green} B: {self.blue}"
+
 
 class Canvas:
     def __init__(self, width: int, height: int, color: Color = None):

@@ -32,6 +32,9 @@ class Ray:
     def transform(self, m: rt.Matrix):
         return Ray(m * self.origin, m * self.direction)
 
+    def __str__(self):
+        return f"Ray: Origin: {self.origin}, Direction: {self.direction}"
+
 
 class Comps(NamedTuple):
     t: float
@@ -40,6 +43,7 @@ class Comps(NamedTuple):
     eyev: rt.Vector
     normalv: rt.Vector
     inside: bool
+    over_point: rt.Point
 
 
 class Intersection:
@@ -59,8 +63,13 @@ class Intersection:
         if normalv.dot(eyev) < 0:
             inside = True
             normalv = -normalv
+        over_point = point + (normalv * rt.EPSILON)
+        return Comps(
+            self.t, self.object, point, -ray.direction, normalv, inside, over_point
+        )
 
-        return Comps(self.t, self.object, point, -ray.direction, normalv, inside)
+    def __str__(self):
+        return f"Intersection\nt:{self.t}\nobject: {self.object}"
 
 
 class Intersections(list):

@@ -155,3 +155,11 @@ class TestRays(unittest.TestCase):
         self.assertEqual(comps.eyev, rt.Vector(0, 0, -1))
         self.assertEqual(comps.normalv, rt.Vector(0, 0, -1))
         self.assertTrue(comps.inside)
+
+    def test_the_hit_should_offset_the_point(self):
+        r = rays.Ray(rt.Point(0, 0, -5), rt.Vector(0, 0, 1))
+        shape = Sphere()
+        shape.set_transform(rt.Translation(0, 0, 1))
+        i = rays.Intersection(5, shape)
+        comps = i.prepare_computations(r)
+        self.assertLess(comps.over_point.z, -rt.EPSILON / 2)
