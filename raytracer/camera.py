@@ -1,16 +1,16 @@
 import math
-import raytracer.base as rt
-import raytracer.rays as rays
+from raytracer.base import *
+from raytracer.rays import *
 from raytracer.world import World
 
 
 class Camera:
-    def __init__(self, hsize: int, vsize: int, fov: float, transform: rt.Matrix = None):
+    def __init__(self, hsize: int, vsize: int, fov: float, transform: Matrix = None):
         self.hsize = hsize
         self.vsize = vsize
         self.fov = fov
         if transform is None:
-            transform = rt.Identity()
+            transform = Identity()
 
         self.transform = transform
         half_view = math.tan(self.fov / 2)
@@ -24,19 +24,19 @@ class Camera:
 
         self.pixel_size = (self.half_width * 2) / self.hsize
 
-    def ray_for_pixel(self, x: int, y: int) -> rays.Ray:
+    def ray_for_pixel(self, x: int, y: int) -> Ray:
         xoffset = (x + 0.5) * self.pixel_size
         yoffset = (y + 0.5) * self.pixel_size
 
         world_x = self.half_width - xoffset
         world_y = self.half_height - yoffset
-        pixel = self.transform.inverse() * rt.Point(world_x, world_y, -1)
-        origin = self.transform.inverse() * rt.Point(0, 0, 0)
+        pixel = self.transform.inverse() * Point(world_x, world_y, -1)
+        origin = self.transform.inverse() * Point(0, 0, 0)
         direction = (pixel - origin).normalize()
-        return rays.Ray(origin, direction)
+        return Ray(origin, direction)
 
     def render(self, world: World):
-        image = rt.Canvas(self.hsize, self.vsize)
+        image = Canvas(self.hsize, self.vsize)
         for y in range(0, self.vsize):
             for x in range(0, self.hsize):
                 ray = self.ray_for_pixel(x, y)

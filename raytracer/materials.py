@@ -1,11 +1,11 @@
-import raytracer.base as rt
+from raytracer.base import Color, Point, Vector 
 from raytracer.lights import PointLight
 
 
 class Material:
     def __init__(
         self,
-        color: rt.Color = rt.Color(1, 1, 1),
+        color: Color = Color(1, 1, 1),
         ambient: float = 0.1,
         diffuse: float = 0.9,
         specular: float = 0.9,
@@ -28,14 +28,14 @@ class Material:
 
     def lighting(
         self,
-        eyev: rt.Vector,
-        normalv: rt.Vector,
-        point: rt.Point,
+        eyev: Vector,
+        normalv: Vector,
+        point: Point,
         light: PointLight,
         inShadow: bool = False,
     ):
-        diffuse = rt.Color(0, 0, 0)
-        specular = rt.Color(0, 0, 0)
+        diffuse = Color(0, 0, 0)
+        specular = Color(0, 0, 0)
         effective_color = self.color * light.intensity
         ambient = effective_color * self.ambient
         if inShadow:
