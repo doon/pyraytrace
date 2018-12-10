@@ -52,3 +52,12 @@ class Material:
                 specular = light.intensity * self.specular * factor
 
         return ambient + diffuse + specular
+
+    def __str__(self):
+        return (
+            f"Color: {self.color}\n"
+            f"Ambient: {self.ambient}\n"
+            f"Diffues: {self.diffuse}\n"
+            f"Specular: {self.specular}\n"
+            f"Shininess: {self.shininess}\n"
+        )
