@@ -26,6 +26,17 @@ class Shape:
         self.material = material
 
 
+class TestShape(Shape):
+    def __init__(self):
+        super().__init__()
+
+    def local_intersect(self, ray: Ray):
+        self.saved_ray = ray
+
+    def object_normal(self, point: Point):
+        return Vector(point.x, point.y, point.z)
+
+
 class Sphere(Shape):
     def __init__(self):
         self.origin = Point(0, 0, 0)

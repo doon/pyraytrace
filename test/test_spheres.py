@@ -7,6 +7,10 @@ from raytracer.shapes import *
 
 
 class TestSpheres(unittest.TestCase):
+    def test_sphere_is_a_shape(self):
+        s = Sphere()
+        self.assertIsInstance(s,Shape)
+
     def test_intersecting_scaled_sphere(self):
         r = Ray(Point(0, 0, -5), Vector(0, 0, 1))
         s = Sphere()
